@@ -1,11 +1,10 @@
+import {random_int} from './utils.js';
+
 import gray_scott_frag from '../shaders/grayscott.frag.js';
 
-const random_int = (min, max) => {
-  return min + Math.floor(Math.random() * (max - min));
-};
-
 const init_uv_tex = (uv_tex, size) => {
-  const n = random_int(4, 6);
+  const n = random_int(4, 8);
+  const r = size / (n * 2) - 16;
   const type = [];
   for (let i = 0; i < n * n; i++) type.push(Math.random() > 0.5);
   for (let y = 0; y < size; y++) {
@@ -19,7 +18,7 @@ const init_uv_tex = (uv_tex, size) => {
           const d = Math.pow(x - x_c, 2) + Math.pow(y - y_c, 2);
           const i_offset = type[circle_x + circle_y * n] * 2;
 
-          if (d < Math.pow(size / 16, 2)) {
+          if (d < Math.pow(r, 2)) {
             uv_tex.image.data[i + i_offset + 1] = 1.0;
           } else {
             uv_tex.image.data[i + i_offset + 0] = 1.0;
@@ -65,7 +64,7 @@ export const init_gray_scott = (size, renderer) => {
     dt: {value: 1.0 /* dt */},
     Du: {value: 1.0 /* Du */},
     Dv: {value: 0.5 /* Dv */},
-    painting_pos: {type: 'v2', value: new THREE.Vector2()},
+    painting_pos: {value: new THREE.Vector2()},
     painting_type: {value: -1},
     painting_done: {value: true}
   };
